@@ -7,10 +7,7 @@ import com.lana.spring.rest.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +31,29 @@ public class MyRestController {
         return employee;
     }
 
-    @ExceptionHandler
+    @PostMapping("api/employees")
+    public Employee addNewEmployee(@RequestBody Employee employee) {
+        employeeService.saveEmployee(employee);
+        return employee;
+    }
+
+    @PutMapping("api/employees")
+    public Employee updateEmployee(@RequestBody Employee employee) {
+        employeeService.saveEmployee(employee);
+        return employee;
+    }
+
+    @DeleteMapping("api/employees/{id}")
+    public String deleteEmployee(@PathVariable int id) {
+        Employee employee = employeeService.getEmployee(id);
+        if(employee == null) {
+            throw new NoSuchEmployeeException("There is no Employee with Id =" + id);
+        }
+        employeeService.deleteEmployee(id);
+        return "Employee with id " + id + " was deleted ";
+    }
+
+   /* @ExceptionHandler
     public ResponseEntity<EmployeeIncorrectData> handlerException(NoSuchEmployeeException exception) {
         EmployeeIncorrectData employeeIncorrectData = new EmployeeIncorrectData();
         employeeIncorrectData.setInfo(exception.getMessage());
@@ -46,6 +65,6 @@ public class MyRestController {
         EmployeeIncorrectData employeeIncorrectData = new EmployeeIncorrectData();
         employeeIncorrectData.setInfo(exception.getMessage());
         return new ResponseEntity<>(employeeIncorrectData, HttpStatus.BAD_REQUEST);
-    }
+    }*/
 
 }
